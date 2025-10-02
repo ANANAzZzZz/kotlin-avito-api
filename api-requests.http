@@ -1,0 +1,426 @@
+@baseUrl = localhost:8080/backservices/api
+
+### ============================================
+### 1. ПОЛЬЗОВАТЕЛИ (Users)
+### ============================================
+
+### Создать пользователя 1 - Екатерина Батюшкова
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "first_name": "Екатерина",
+  "last_name": "Батюшкова",
+  "email": "catherinee@gmail.com",
+  "password": "password123",
+  "role": "USER",
+  "address": "Москва, ул. Лесная, 7"
+}
+
+### Создать пользователя 2 - Магазин Pear Store
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "first_name": "Pear",
+  "last_name": "Store",
+  "email": "pearstore@shop.com",
+  "password": "store123",
+  "role": "MODERATOR",
+  "address": "Москва"
+}
+
+### Создать пользователя 3 - Магазин TECHNO ZONE
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "first_name": "TECHNO",
+  "last_name": "ZONE",
+  "email": "technozone@shop.com",
+  "password": "store123",
+  "role": "MODERATOR",
+  "address": "Москва"
+}
+
+### Создать администратора
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "first_name": "Иван",
+  "last_name": "Иванов",
+  "email": "admin@store.com",
+  "password": "admin123",
+  "role": "ADMIN",
+  "address": "Москва"
+}
+
+### Получить всех пользователей
+GET {{baseUrl}}/users
+
+### Получить пользователя по ID
+GET {{baseUrl}}/users/1
+
+### Получить пользователя по email
+GET {{baseUrl}}/users/email/catherine@gmail.com
+
+### Поиск пользователей по имени
+GET {{baseUrl}}/users/search?name=Екатерина
+
+### Получить пользователей по роли
+GET {{baseUrl}}/users/role/USER
+
+### Получить пользователей по минимальному рейтингу
+GET {{baseUrl}}/users/rating?minRating=4.5
+
+### Проверить существует ли пользователь с email
+GET {{baseUrl}}/users/exists?email=catherine@gmail.com
+
+### Обновить пользователя
+PUT {{baseUrl}}/users/2
+Content-Type: application/json
+
+{
+  "first_name": "Екатерина",
+  "last_name": "Батюшкова",
+  "email": "catherine@gmail.com",
+  "password": "password123",
+  "role": "USER",
+  "address": "Москва, ул. Лесная, 7",
+  "rating": 4.9
+}
+
+### Удалить пользователя
+DELETE {{baseUrl}}/users/18
+
+### ============================================
+### 2. ОБЪЯВЛЕНИЯ (Advertisements)
+### ============================================
+
+### Создать объявление - Зарядка MagSafe
+POST {{baseUrl}}/advertisements
+Content-Type: application/json
+
+{
+  "name": "Зарядка MagSafe Charger 15W 1 метр",
+  "description": "Оригинальная магнитная зарядка для iPhone с поддержкой быстрой зарядки 15W",
+  "owner_id": 14
+}
+
+### Создать объявление - AirPods Pro 2
+POST {{baseUrl}}/advertisements
+Content-Type: application/json
+
+{
+  "name": "AirPods Pro 2",
+  "description": "Беспроводные наушники с активным шумоподавлением, прозрачный режим",
+  "owner_id": 14
+}
+
+### Создать объявление - Apple Watch 10
+POST {{baseUrl}}/advertisements
+Content-Type: application/json
+
+{
+  "name": "Apple Watch 10 42mm Blue",
+  "description": "Умные часы Apple Watch Series 10 в синем корпусе 42мм",
+  "owner_id": 14
+}
+
+### Создать объявление - iPhone 16 Pro
+POST {{baseUrl}}/advertisements
+Content-Type: application/json
+
+{
+  "name": "iPhone 16 Pro, 256 ГБ",
+  "description": "Флагманский смартфон Apple с тройной камерой и процессором A18 Pro",
+  "owner_id": 14
+}
+
+### Получить все объявления
+GET {{baseUrl}}/advertisements
+
+### Получить объявление по ID
+GET {{baseUrl}}/advertisements/1
+
+### Поиск объявлений по ключевому слову (в имени и описании)
+GET {{baseUrl}}/advertisements/search?keyword=iPhone
+
+### Поиск объявлений по имени
+GET {{baseUrl}}/advertisements/search/name?name=AirPods
+
+### Поиск объявлений по описанию
+GET {{baseUrl}}/advertisements/search/description?description=зарядка
+
+### Получить объявления владельца
+GET {{baseUrl}}/advertisements/owner/2
+
+### Обновить объявление
+PUT {{baseUrl}}/advertisements/1
+Content-Type: application/json
+
+{
+  "name": "Зарядка MagSafe Charger 15W 1 метр (обновлено)",
+  "description": "Оригинальная магнитная зарядка для iPhone с поддержкой быстрой зарядки 15W. В отличном состоянии"
+}
+
+### Удалить объявление
+DELETE {{baseUrl}}/advertisements/1
+
+### ============================================
+### 3. СПОСОБЫ ОПЛАТЫ (Payment Methods)
+### ============================================
+
+### Создать способ оплаты - Кошелёк
+POST {{baseUrl}}/payment-methods
+Content-Type: application/json
+
+{
+  "name": "Кошелёк",
+  "image": "https://cdn-icons-png.freepik.com/256/13351/13351800.png?semt=ais_white_label"
+}
+
+### Создать способ оплаты - Т-Банк
+POST {{baseUrl}}/payment-methods
+Content-Type: application/json
+
+{
+  "name": "Т-Банк",
+  "image": "https://cdnn21.img.ria.ru/images/07e8/02/0f/1927608429_0:0:640:640_768x0_80_0_0_9ee3208a858f047230db3e2455891c78.jpg"
+}
+
+### Создать способ оплаты - СБП
+POST {{baseUrl}}/payment-methods
+Content-Type: application/json
+
+{
+  "name": "СБП",
+  "image": "https://upload.wikimedia.org/wikipedia/ru/thumb/c/c7/%D0%A1%D0%91%D0%9F_%D0%BB%D0%BE%D0%B3%D0%BE%D1%82%D0%B8%D0%BF.svg/1200px-%D0%A1%D0%91%D0%9F_%D0%BB%D0%BE%D0%B3%D0%BE%D1%82%D0%B8%D0%BF.svg.png"
+}
+
+### Получить все способы оплаты
+GET {{baseUrl}}/payment-methods
+
+### Получить способ оплаты по ID
+GET {{baseUrl}}/payment-methods/1
+
+### Поиск способов оплаты по имени
+GET {{baseUrl}}/payment-methods/search?name=Банк
+
+### Обновить способ оплаты
+PUT {{baseUrl}}/payment-methods/1
+Content-Type: application/json
+
+{
+  "name": "Кошелёк (обновлено)",
+  "image": "wallet_new_icon.png"
+}
+
+### Удалить способ оплаты
+DELETE {{baseUrl}}/payment-methods/2
+
+### ============================================
+### 4. СПОСОБЫ ДОСТАВКИ (Shipping Methods)
+### ============================================
+
+### Создать способ доставки - Авито Доставка
+POST {{baseUrl}}/shipping-methods
+Content-Type: application/json
+
+{
+  "name": "Авито Доставка по Москве",
+  "price": 123.0
+}
+
+### Создать способ доставки - Почта России
+POST {{baseUrl}}/shipping-methods
+Content-Type: application/json
+
+{
+  "name": "Отделение Почты России",
+  "price": 157.0
+}
+
+### Создать способ доставки - СДЭК
+POST {{baseUrl}}/shipping-methods
+Content-Type: application/json
+
+{
+  "name": "Пункты выдачи СДЭК",
+  "price": 161.0
+}
+
+### Создать способ доставки - Яндекс
+POST {{baseUrl}}/shipping-methods
+Content-Type: application/json
+
+{
+  "name": "Пункты выдачи Яндекс.Доставка",
+  "price": 539.0
+}
+
+### Создать способ доставки - Курьер
+POST {{baseUrl}}/shipping-methods
+Content-Type: application/json
+
+{
+  "name": "В пункт выдачи. Курьер",
+  "price": 0.0
+}
+
+### Получить все способы доставки
+GET {{baseUrl}}/shipping-methods
+
+### Получить способ доставки по ID
+GET {{baseUrl}}/shipping-methods/1
+
+### Поиск способов доставки по имени
+GET {{baseUrl}}/shipping-methods/search?name=СДЭК
+
+### Получить способы доставки с ценой в диапазоне
+GET {{baseUrl}}/shipping-methods/price/range?minPrice=100&maxPrice=200
+
+### Получить способы доставки с максимальной ценой
+GET {{baseUrl}}/shipping-methods/price/max?maxPrice=150
+
+### Обновить способ доставки
+PUT {{baseUrl}}/shipping-methods/1
+Content-Type: application/json
+
+{
+  "name": "Авито Доставка по Москве (обновлено)",
+  "price": 130.0
+}
+
+### Удалить способ доставки
+DELETE {{baseUrl}}/shipping-methods/5
+
+### ============================================
+### 5. КОРЗИНА (Cart)
+### ============================================
+
+### Создать корзину для пользователя
+POST {{baseUrl}}/carts?userId=14
+
+### Получить все корзины
+GET {{baseUrl}}/carts
+
+### Получить корзину по ID
+GET {{baseUrl}}/carts/1
+
+### Получить корзину пользователя
+GET {{baseUrl}}/carts/user/1
+
+### Получить корзину с объявлениями
+GET {{baseUrl}}/carts/1/with-advertisements
+
+### Удалить корзину
+DELETE {{baseUrl}}/carts/1
+
+### ============================================
+### 6. ДОБАВЛЕНИЕ ТОВАРОВ В КОРЗИНУ
+### ============================================
+
+### Добавить зарядку в корзину
+POST {{baseUrl}}/carts/add-advertisement
+Content-Type: application/json
+
+{
+  "cart_id": 3,
+  "advertisement_id": 3
+}
+
+### Добавить AirPods в корзину
+POST {{baseUrl}}/carts/add-advertisement
+Content-Type: application/json
+
+{
+  "cart_id": 3,
+  "advertisement_id": 4
+}
+
+### Добавить Apple Watch в корзину
+POST {{baseUrl}}/carts/add-advertisement
+Content-Type: application/json
+
+{
+  "cart_id": 3,
+  "advertisement_id": 5
+}
+
+### Добавить iPhone в корзину
+POST {{baseUrl}}/carts/add-advertisement
+Content-Type: application/json
+
+{
+  "cart_id": 3,
+  "advertisement_id": 6
+}
+
+### Удалить товар из корзины
+DELETE {{baseUrl}}/carts/1/advertisements/2
+
+### ============================================
+### 7. ЗАКАЗЫ (Ships)
+### ============================================
+
+### Создать заказ
+POST {{baseUrl}}/ships
+Content-Type: application/json
+
+{
+  "name": "Заказ №1 от Екатерины Батюшковой",
+  "shipping_method_id": 1,
+  "payment_method_id": 3,
+  "receiver_id": 15,
+  "owner_id": 14,
+  "address": "Москва, ул. Лесная, 7"
+}
+
+### Создать заказ 2
+POST {{baseUrl}}/ships
+Content-Type: application/json
+
+{
+  "name": "Заказ №2 от Екатерины Батюшковой",
+  "shipping_method_id": 3,
+  "payment_method_id": 4,
+  "receiver_id": 15,
+  "owner_id": 14,
+  "address": "Москва, ул. Лесная, 7"
+}
+
+### Получить все заказы
+GET {{baseUrl}}/ships
+
+### Получить заказ по ID
+GET {{baseUrl}}/ships/1
+
+### Поиск заказов по имени
+GET {{baseUrl}}/ships/search?name=Екатерины
+
+### Получить заказы получателя
+GET {{baseUrl}}/ships/receiver/1
+
+### Получить заказы по способу доставки
+GET {{baseUrl}}/ships/shipping-method/1
+
+### Получить заказы по способу оплаты
+GET {{baseUrl}}/ships/payment-method/1
+
+### Обновить заказ
+PUT {{baseUrl}}/ships/1
+Content-Type: application/json
+
+{
+  "name": "Заказ №1 от Екатерины Батюшковой (обновлено)",
+  "shipping_method_id": 2,
+  "payment_method_id": 2,
+  "receiver_id": 1,
+  "owner_id": 1,
+  "address": "Москва, ул. Лесная, 7, кв. 10"
+}
+
+### Удалить заказ
+DELETE {{baseUrl}}/ships/2

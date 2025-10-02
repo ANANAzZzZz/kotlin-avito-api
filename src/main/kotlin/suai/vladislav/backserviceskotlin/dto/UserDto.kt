@@ -3,17 +3,20 @@ package suai.vladislav.backserviceskotlin.dto
 import suai.vladislav.backserviceskotlin.entity.UserRole
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.DecimalMax
 import jakarta.validation.constraints.DecimalMin
+import com.fasterxml.jackson.annotation.JsonIgnore
 
 data class UserDto(
     val id: Long? = null,
-    @field:NotBlank
+    @field:NotNull
     val role: UserRole,
     @field:Email
     @field:NotBlank
     val email: String,
     @field:NotBlank
+    @JsonIgnore
     val password: String,
     @field:NotBlank
     val lastName: String,
@@ -26,7 +29,7 @@ data class UserDto(
 )
 
 data class UserCreateDto(
-    @field:NotBlank
+    @field:NotNull
     val role: UserRole,
     @field:Email
     @field:NotBlank

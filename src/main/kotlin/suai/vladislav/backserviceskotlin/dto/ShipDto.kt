@@ -16,6 +16,9 @@ data class ShipDto(
     @field:NotNull
     val receiverId: Long,
     val receiverName: String? = null,
+    @field:NotNull
+    val ownerId: Long,
+    val ownerName: String? = null,
     @field:NotBlank
     val address: String
 )
@@ -29,6 +32,8 @@ data class ShipCreateDto(
     val paymentMethodId: Long,
     @field:NotNull
     val receiverId: Long,
+    @field:NotNull
+    val ownerId: Long,
     @field:NotBlank
     val address: String
 )
@@ -38,5 +43,6 @@ data class ShipUpdateDto(
     val shippingMethodId: Long? = null,
     val paymentMethodId: Long? = null,
     val receiverId: Long? = null,
+    val ownerId: Long? = null,
     val address: String? = null
 )

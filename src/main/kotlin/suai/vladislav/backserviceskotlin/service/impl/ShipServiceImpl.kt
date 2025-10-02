@@ -41,6 +41,9 @@ class ShipServiceImpl(
         val receiver = userRepository.findById(shipCreateDto.receiverId)
             .orElseThrow { ResourceNotFoundException("User not found with id: ${shipCreateDto.receiverId}") }
 
+        val owner = userRepository.findById(shipCreateDto.ownerId)
+            .orElseThrow { ResourceNotFoundException("User not found with id: ${shipCreateDto.ownerId}") }
+
         val shippingMethod = shippingMethodRepository.findById(shipCreateDto.shippingMethodId)
             .orElseThrow { ResourceNotFoundException("Shipping method not found with id: ${shipCreateDto.shippingMethodId}") }
 
@@ -52,6 +55,7 @@ class ShipServiceImpl(
             shippingMethod = shippingMethod,
             paymentMethod = paymentMethod,
             receiver = receiver,
+            owner = owner,
             address = shipCreateDto.address
         )
 
@@ -68,6 +72,12 @@ class ShipServiceImpl(
             val receiver = userRepository.findById(receiverId)
                 .orElseThrow { ResourceNotFoundException("User not found with id: $receiverId") }
             updatedShip = updatedShip.copy(receiver = receiver)
+        }
+
+        shipUpdateDto.ownerId?.let { ownerId ->
+            val owner = userRepository.findById(ownerId)
+                .orElseThrow { ResourceNotFoundException("User not found with id: $ownerId") }
+            updatedShip = updatedShip.copy(owner = owner)
         }
 
         shipUpdateDto.shippingMethodId?.let { shippingMethodId ->
@@ -106,6 +116,8 @@ class ShipServiceImpl(
         paymentMethodName = paymentMethod.name,
         receiverId = receiver.id,
         receiverName = "${receiver.firstName} ${receiver.lastName}",
+        ownerId = owner.id,
+        ownerName = "${owner.firstName} ${owner.lastName}",
         address = address
     )
 }

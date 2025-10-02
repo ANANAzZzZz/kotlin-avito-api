@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.DecimalMax
 import jakarta.validation.constraints.DecimalMin
+import com.fasterxml.jackson.annotation.JsonIgnore
 
 @Entity
 @Table(name = "users")
@@ -23,6 +24,7 @@ data class User(
     val email: String,
 
     @NotBlank
+    @JsonIgnore
     @Column(nullable = false)
     val password: String,
 

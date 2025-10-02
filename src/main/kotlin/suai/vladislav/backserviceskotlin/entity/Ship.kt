@@ -30,6 +30,11 @@ data class Ship(
     @NotNull
     val receiver: User,
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id", nullable = false)
+    @NotNull
+    val owner: User,
+
     @NotBlank
     @Column(nullable = false)
     val address: String

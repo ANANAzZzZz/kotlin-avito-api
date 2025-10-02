@@ -9,9 +9,9 @@ spring:
     name: back-services-kotlin
 
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: ${DB_URL:jdbc:postgresql://ep-crimson-wave-agglnc9y-pooler.c-2.eu-central-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require}
+    username: ${DB_USERNAME:neondb_owner}
+    password: ${DB_PASSWORD:npg_Jo6fK3vBEtYp}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -32,9 +32,8 @@ logging:
   level:
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.springframework.web: DEBUG
 
 springdoc:
   api-docs:
     path: /api-docs
-  swagger-ui:
-    path: /
