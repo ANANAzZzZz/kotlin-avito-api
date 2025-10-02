@@ -1,10 +1,8 @@
 name: Java CI/CD with SCP
-
 on:
   push:
     branches:
       - master
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,40 +14,36 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: 'maven'
-
       - name: Build with Maven
-        run: mvn clean install -DskipTests # Build your project and skip tests for faster build
-
+        run: mvn clean install -DskipTests
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: java-app # Name of the artifact
-          path: target/*.jar # Path to your built JAR/WAR file (adjust as needed)
-
+          name: java-app
+          path: target/*.jar
   deploy:
-    needs: build # This job depends on the 'build' job
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
           name: java-app
-
       - name: Deploy via SCP
-        uses: appleboy/scp-action@v0.1.7 # Using a third-party SCP action
+        uses: appleboy/scp-action@v0.1.7
         with:
-          host: ${{ secrets.SERVER_HOST  }}
-          username: ${{ secrets.SERVER_USER  }}
-          key: ${{ secrets.SERVER_SSH_KEY  }}
-          source: './*.jar' # Source file to transfer (adjust if not a JAR)
-          target: '/opt/myapp' # Remote directory on your server
-
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          source: './*.jar'
+          target: '/opt/kotlin-app'
       - name: Restart application
-        uses: appleboy/ssh-action@v1.0.3 # Using a third-party SSH action to run commands
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            sudo systemctl restart myapp.service # Adjust service name
-            echo "Application restarted successfully!"
+            sudo systemctl restart kotlin-app.service
+            sudo systemctl status kotlin-app.service
+            echo "Kotlin application restarted successfully!"
