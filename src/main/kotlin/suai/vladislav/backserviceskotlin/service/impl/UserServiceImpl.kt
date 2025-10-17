@@ -1,5 +1,7 @@
 package suai.vladislav.backserviceskotlin.service.impl
 
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import suai.vladislav.backserviceskotlin.dto.*
@@ -11,33 +13,40 @@ import suai.vladislav.backserviceskotlin.repository.UserRepository
 import suai.vladislav.backserviceskotlin.service.UserService
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 class UserServiceImpl(
     private val userRepository: UserRepository
 ) : UserService {
 
+    @Cacheable(value = ["users"])
     override fun findAll(): List<UserDto> =
         userRepository.findAll().map { it.toDto() }
 
+    @Cacheable(value = ["userById"], key = "#id")
     override fun findById(id: Long): UserDto =
         userRepository.findById(id)
             .orElseThrow { ResourceNotFoundException("User not found with id: $id") }
             .toDto()
 
+    @Cacheable(value = ["userByEmail"], key = "#email")
     override fun findByEmail(email: String): UserDto =
         userRepository.findByEmail(email)
             .orElseThrow { ResourceNotFoundException("User not found with email: $email") }
             .toDto()
 
+    @Cacheable(value = ["usersByRole"], key = "#role")
     override fun findByRole(role: UserRole): List<UserDto> =
         userRepository.findByRole(role).map { it.toDto() }
 
+    @Cacheable(value = ["usersByRating"], key = "#minRating")
     override fun findByRatingGreaterThanEqual(minRating: Float): List<UserDto> =
         userRepository.findByRatingGreaterThanEqualOrderByRatingDesc(minRating).map { it.toDto() }
 
     override fun searchByName(name: String): List<UserDto> =
         userRepository.findByNameContainingIgnoreCase(name).map { it.toDto() }
 
+    @Transactional
+    @CacheEvict(value = ["users", "usersByRole", "usersByRating"], allEntries = true)
     override fun create(userCreateDto: UserCreateDto): UserDto {
         if (userRepository.existsByEmail(userCreateDto.email)) {
             throw ResourceAlreadyExistsException("User with email ${userCreateDto.email} already exists")
@@ -46,7 +55,7 @@ class UserServiceImpl(
         val user = User(
             role = userCreateDto.role,
             email = userCreateDto.email,
-            password = userCreateDto.password, // В реальном приложении пароль должен быть зашифрован
+            password = userCreateDto.password,
             lastName = userCreateDto.lastName,
             firstName = userCreateDto.firstName,
             address = userCreateDto.address
@@ -55,6 +64,8 @@ class UserServiceImpl(
         return userRepository.save(user).toDto()
     }
 
+    @Transactional
+    @CacheEvict(value = ["users", "userById", "userByEmail", "usersByRole", "usersByRating"], allEntries = true)
     override fun update(id: Long, userUpdateDto: UserUpdateDto): UserDto {
         val existingUser = userRepository.findById(id)
             .orElseThrow { ResourceNotFoundException("User not found with id: $id") }
@@ -79,6 +90,8 @@ class UserServiceImpl(
         return userRepository.save(updatedUser).toDto()
     }
 
+    @Transactional
+    @CacheEvict(value = ["users", "userById", "userByEmail", "usersByRole", "usersByRating"], allEntries = true)
     override fun deleteById(id: Long) {
         if (!userRepository.existsById(id)) {
             throw ResourceNotFoundException("User not found with id: $id")

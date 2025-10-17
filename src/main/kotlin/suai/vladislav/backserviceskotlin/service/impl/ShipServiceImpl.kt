@@ -1,5 +1,7 @@
 package suai.vladislav.backserviceskotlin.service.impl
 
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import suai.vladislav.backserviceskotlin.dto.*
@@ -9,7 +11,7 @@ import suai.vladislav.backserviceskotlin.repository.*
 import suai.vladislav.backserviceskotlin.service.ShipService
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 class ShipServiceImpl(
     private val shipRepository: ShipRepository,
     private val userRepository: UserRepository,
@@ -17,26 +19,33 @@ class ShipServiceImpl(
     private val paymentMethodRepository: PaymentMethodRepository
 ) : ShipService {
 
+    @Cacheable(value = ["ships"])
     override fun findAll(): List<ShipDto> =
         shipRepository.findAll().map { it.toDto() }
 
+    @Cacheable(value = ["shipById"], key = "#id")
     override fun findById(id: Long): ShipDto =
         shipRepository.findById(id)
             .orElseThrow { ResourceNotFoundException("Ship not found with id: $id") }
             .toDto()
 
+    @Cacheable(value = ["shipsByReceiver"], key = "#receiverId")
     override fun findByReceiverId(receiverId: Long): List<ShipDto> =
         shipRepository.findByReceiverId(receiverId).map { it.toDto() }
 
+    @Cacheable(value = ["shipsByShippingMethod"], key = "#shippingMethodId")
     override fun findByShippingMethodId(shippingMethodId: Long): List<ShipDto> =
         shipRepository.findByShippingMethodId(shippingMethodId).map { it.toDto() }
 
+    @Cacheable(value = ["shipsByPaymentMethod"], key = "#paymentMethodId")
     override fun findByPaymentMethodId(paymentMethodId: Long): List<ShipDto> =
         shipRepository.findByPaymentMethodId(paymentMethodId).map { it.toDto() }
 
     override fun searchByName(name: String): List<ShipDto> =
         shipRepository.findByNameContainingIgnoreCase(name).map { it.toDto() }
 
+    @Transactional
+    @CacheEvict(value = ["ships", "shipsByReceiver", "shipsByShippingMethod", "shipsByPaymentMethod"], allEntries = true)
     override fun create(shipCreateDto: ShipCreateDto): ShipDto {
         val receiver = userRepository.findById(shipCreateDto.receiverId)
             .orElseThrow { ResourceNotFoundException("User not found with id: ${shipCreateDto.receiverId}") }
@@ -62,6 +71,8 @@ class ShipServiceImpl(
         return shipRepository.save(ship).toDto()
     }
 
+    @Transactional
+    @CacheEvict(value = ["ships", "shipById", "shipsByReceiver", "shipsByShippingMethod", "shipsByPaymentMethod"], allEntries = true)
     override fun update(id: Long, shipUpdateDto: ShipUpdateDto): ShipDto {
         val existingShip = shipRepository.findById(id)
             .orElseThrow { ResourceNotFoundException("Ship not found with id: $id") }
@@ -100,6 +111,8 @@ class ShipServiceImpl(
         return shipRepository.save(updatedShip).toDto()
     }
 
+    @Transactional
+    @CacheEvict(value = ["ships", "shipById", "shipsByReceiver", "shipsByShippingMethod", "shipsByPaymentMethod"], allEntries = true)
     override fun deleteById(id: Long) {
         if (!shipRepository.existsById(id)) {
             throw ResourceNotFoundException("Ship not found with id: $id")

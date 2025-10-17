@@ -54,12 +54,13 @@ spring:
     property-naming-strategy: SNAKE_CASE
     serialization:
       write-dates-as-timestamps: false
+    default-property-inclusion: non_null
 
   # Кэширование
   cache:
     type: caffeine
     caffeine:
-      spec: maximumSize=500,expireAfterWrite=5m
+      spec: maximumSize=1000,expireAfterWrite=10m
 
 logging:
   level:

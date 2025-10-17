@@ -15,12 +15,40 @@ class CacheConfig {
     @Bean
     fun cacheManager(): CacheManager {
         val cacheManager = CaffeineCacheManager(
+            // Advertisement caches
             "advertisements",
             "advertisementById",
             "advertisementsByOwner",
+
+            // User caches
             "users",
+            "userById",
+            "userByEmail",
+            "usersByRole",
+            "usersByRating",
+
+            // Payment method caches
             "paymentMethods",
-            "shippingMethods"
+            "paymentMethodById",
+
+            // Shipping method caches
+            "shippingMethods",
+            "shippingMethodById",
+            "shippingMethodsByPrice",
+            "shippingMethodsByPriceRange",
+
+            // Ship caches
+            "ships",
+            "shipById",
+            "shipsByReceiver",
+            "shipsByShippingMethod",
+            "shipsByPaymentMethod",
+
+            // Cart caches
+            "carts",
+            "cartById",
+            "cartByUser",
+            "cartWithAdvertisements"
         )
         cacheManager.setCaffeine(caffeineCacheBuilder())
         return cacheManager
@@ -28,10 +56,9 @@ class CacheConfig {
 
     private fun caffeineCacheBuilder(): Caffeine<Any, Any> {
         return Caffeine.newBuilder()
-            .initialCapacity(100)
-            .maximumSize(500)
-            .expireAfterWrite(5, TimeUnit.MINUTES)
+            .initialCapacity(200)
+            .maximumSize(1000)
+            .expireAfterWrite(10, TimeUnit.MINUTES)
             .recordStats()
     }
 }
-
