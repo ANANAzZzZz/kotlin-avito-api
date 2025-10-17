@@ -403,6 +403,9 @@ GET {{baseUrl}}/ships/search?name=Екатерины
 ### Получить заказы получателя
 GET {{baseUrl}}/ships/receiver/1
 
+### Получить заказы владельца
+GET {{baseUrl}}/ships/owner/14
+
 ### Получить заказы по способу доставки
 GET {{baseUrl}}/ships/shipping-method/1
 
@@ -424,3 +427,372 @@ Content-Type: application/json
 
 ### Удалить заказ
 DELETE {{baseUrl}}/ships/2
+
+### ============================================
+### 8. BDUI - АУТЕНТИФИКАЦИЯ
+### ============================================
+
+### Авторизация в BDUI
+POST {{baseUrl}}/bdui/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "admin123"
+}
+
+### Выход из BDUI
+POST {{baseUrl}}/bdui/auth/logout
+Authorization: Bearer your_token_here
+
+### Обновить токен BDUI
+POST {{baseUrl}}/bdui/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "your_refresh_token_here"
+}
+
+### ============================================
+### 9. BDUI - ПРОДУКТЫ
+### ============================================
+
+### Создать продукт BDUI
+POST {{baseUrl}}/bdui/products
+Content-Type: application/json
+X-User-ID: user123
+
+{
+  "name": "Тестовый продукт BDUI",
+  "slug": "test-product",
+  "description": "Описание тестового продукта",
+  "status": "draft",
+  "version": "1.0.0"
+}
+
+### Получить все продукты BDUI
+GET {{baseUrl}}/bdui/products?page=1&limit=20
+
+### Получить продукт BDUI по ID
+GET {{baseUrl}}/bdui/products/product-id-here
+
+### Обновить продукт BDUI
+PUT {{baseUrl}}/bdui/products/product-id-here
+Content-Type: application/json
+
+{
+  "name": "Обновленный продукт",
+  "description": "Обновленное описание",
+  "status": "active"
+}
+
+### Удалить продукт BDUI
+DELETE {{baseUrl}}/bdui/products/product-id-here
+
+### Дублировать продукт BDUI
+POST {{baseUrl}}/bdui/products/product-id-here/duplicate
+Content-Type: application/json
+
+{
+  "name": "Копия продукта",
+  "slug": "copy-product"
+}
+
+### Опубликовать продукт BDUI
+POST {{baseUrl}}/bdui/products/product-id-here/publish
+Content-Type: application/json
+
+{
+  "version": "1.1.0"
+}
+
+### ============================================
+### 10. BDUI - ЭКРАНЫ
+### ============================================
+
+### Создать экран BDUI
+POST {{baseUrl}}/bdui/products/product-id-here/screens
+Content-Type: application/json
+
+{
+  "name": "Главный экран",
+  "type": "main",
+  "style": {"backgroundColor": "#ffffff"},
+  "sections": {"header": {"type": "header", "properties": {}}}
+}
+
+### Получить все экраны BDUI
+GET {{baseUrl}}/bdui/products/product-id-here/screens
+
+### Получить экран BDUI по ID
+GET {{baseUrl}}/bdui/products/product-id-here/screens/screen-id-here
+
+### Обновить экран BDUI
+PUT {{baseUrl}}/bdui/products/product-id-here/screens/screen-id-here
+Content-Type: application/json
+
+{
+  "name": "Обновленный главный экран",
+  "type": "main",
+  "style": {"backgroundColor": "#f0f0f0"}
+}
+
+### Удалить экран BDUI
+DELETE {{baseUrl}}/bdui/products/product-id-here/screens/screen-id-here
+
+### ============================================
+### 11. BDUI - ПЕРЕМЕННЫЕ
+### ============================================
+
+### Создать переменную BDUI
+POST {{baseUrl}}/bdui/products/product-id-here/variables
+Content-Type: application/json
+
+{
+  "path": "theme.color",
+  "schemaDefinition": {"type": "string", "enum": ["light", "dark"]},
+  "defaultValue": "light"
+}
+
+### Получить все переменные BDUI
+GET {{baseUrl}}/bdui/products/product-id-here/variables
+
+### Обновить переменную BDUI
+PUT {{baseUrl}}/bdui/products/product-id-here/variables/theme.color
+Content-Type: application/json
+
+{
+  "schemaDefinition": {"type": "string", "enum": ["light", "dark", "auto"]},
+  "defaultValue": "auto"
+}
+
+### Удалить переменную BDUI
+DELETE {{baseUrl}}/bdui/products/product-id-here/variables/theme.color
+
+### ============================================
+### 12. BDUI - ГРАФЫ
+### ============================================
+
+### Получить граф BDUI
+GET {{baseUrl}}/bdui/products/product-id-here/graphs
+
+### Создать узел графа BDUI
+POST {{baseUrl}}/bdui/products/product-id-here/graphs/nodes
+Content-Type: application/json
+
+{
+  "type": "component",
+  "position": {"x": 100, "y": 100},
+  "data": {"label": "Узел 1"},
+  "style": {"backgroundColor": "#ffffff"}
+}
+
+### Обновить узел графа BDUI
+PUT {{baseUrl}}/bdui/products/product-id-here/graphs/nodes/node-id-here
+Content-Type: application/json
+
+{
+  "type": "component",
+  "position": {"x": 150, "y": 150},
+  "data": {"label": "Обновленный узел"}
+}
+
+### Удалить узел графа BDUI
+DELETE {{baseUrl}}/bdui/products/product-id-here/graphs/nodes/node-id-here
+
+### Создать ребро графа BDUI
+POST {{baseUrl}}/bdui/products/product-id-here/graphs/edges
+Content-Type: application/json
+
+{
+  "type": "connection",
+  "source": "node-id-1",
+  "target": "node-id-2",
+  "sourceHandle": "output",
+  "targetHandle": "input"
+}
+
+### Удалить ребро графа BDUI
+DELETE {{baseUrl}}/bdui/products/product-id-here/graphs/edges/edge-id-here
+
+### ============================================
+### 13. BDUI - РЕСУРСЫ
+### ============================================
+
+### Создать ресурс BDUI
+POST {{baseUrl}}/bdui/products/product-id-here/assets
+Content-Type: application/json
+
+{
+  "filename": "logo.png",
+  "originalFilename": "company-logo.png",
+  "fileSize": 15420,
+  "mimeType": "image/png",
+  "url": "https://example.com/logo.png",
+  "folder": "images"
+}
+
+### Получить все ресурсы BDUI
+GET {{baseUrl}}/bdui/products/product-id-here/assets
+
+### Получить ресурс BDUI по ID
+GET {{baseUrl}}/bdui/products/product-id-here/assets/asset-id-here
+
+### Обновить ресурс BDUI
+PUT {{baseUrl}}/bdui/products/product-id-here/assets/asset-id-here
+Content-Type: application/json
+
+{
+  "filename": "new-logo.png",
+  "originalFilename": "new-company-logo.png",
+  "url": "https://example.com/new-logo.png"
+}
+
+### Удалить ресурс BDUI
+DELETE {{baseUrl}}/bdui/products/product-id-here/assets/asset-id-here
+
+### ============================================
+### 14. BDUI - АНАЛИТИКА
+### ============================================
+
+### Отправить события аналитики BDUI
+POST {{baseUrl}}/bdui/analytics/events
+Content-Type: application/json
+
+{
+  "events": [
+    {
+      "eventType": "screen_view",
+      "productId": "product-id-here",
+      "screenId": "screen-id-here",
+      "userId": "user-id-here",
+      "sessionId": "session-id-here",
+      "timestamp": "2025-10-02T19:30:00",
+      "eventData": {"duration": 5000}
+    }
+  ]
+}
+
+### Получить аналитику продукта BDUI
+GET {{baseUrl}}/bdui/analytics/products/product-id-here?startDate=2025-10-01T00:00:00&endDate=2025-10-02T23:59:59&groupBy=day
+
+### Получить воронки продукта BDUI
+GET {{baseUrl}}/bdui/analytics/products/product-id-here/funnels
+
+### Получить heatmap экрана BDUI
+GET {{baseUrl}}/bdui/analytics/products/product-id-here/heatmaps/screen-id-here
+
+### ============================================
+### 15. BDUI - ВЕБХУКИ
+### ============================================
+
+### Создать вебхук BDUI
+POST {{baseUrl}}/bdui/webhooks
+Content-Type: application/json
+X-User-ID: user-id-here
+
+{
+  "url": "https://example.com/webhook",
+  "events": ["user.created", "order.completed"],
+  "productId": "product-id-here",
+  "secret": "webhook-secret"
+}
+
+### Получить все вебхуки BDUI
+GET {{baseUrl}}/bdui/webhooks
+
+### Получить вебхук BDUI по ID
+GET {{baseUrl}}/bdui/webhooks/webhook-id-here
+
+### Удалить вебхук BDUI
+DELETE {{baseUrl}}/bdui/webhooks/webhook-id-here
+
+### Тестировать вебхук BDUI
+POST {{baseUrl}}/bdui/webhooks/1/test
+
+### ============================================
+### 16. ТЕСТОВЫЕ ЗАПРОСЫ С ОШИБКАМИ
+### ============================================
+
+### Тест 404 - несуществующий пользователь
+GET {{baseUrl}}/users/999999
+
+### Тест 400 - создание пользователя с некорректными данными
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "first_name": "",
+  "last_name": "",
+  "email": "invalid-email",
+  "password": "",
+  "role": "INVALID_ROLE"
+}
+
+### Тест 409 - создание пользователя с существующим email
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "first_name": "Тест",
+  "last_name": "Тестович",
+  "email": "catherinee@gmail.com",
+  "password": "password123",
+  "role": "USER",
+  "address": "Тестовый адрес"
+}
+
+### Тест 400 - создание заказа без owner_id
+POST {{baseUrl}}/ships
+Content-Type: application/json
+
+{
+  "name": "Заказ без владельца",
+  "shipping_method_id": 1,
+  "payment_method_id": 3,
+  "receiver_id": 15,
+  "address": "Москва, ул. Лесная, 7"
+}
+
+### ============================================
+### 17. СПЕЦИАЛЬНЫЕ ТЕСТЫ
+### ============================================
+
+### Получить статистику по пользователям
+GET {{baseUrl}}/users/stats
+
+### Получить топ объявлений
+GET {{baseUrl}}/advertisements/top?limit=10
+
+### Получить статистику по заказам
+GET {{baseUrl}}/ships/stats
+
+### Получить популярные способы доставки
+GET {{baseUrl}}/shipping-methods/popular
+
+### Получить популярные способы оплаты
+GET {{baseUrl}}/payment-methods/popular
+
+### Получить активные корзины
+GET {{baseUrl}}/carts/active
+
+### Экспорт данных пользователей
+GET {{baseUrl}}/users/export?format=csv
+
+### Импорт данных пользователей
+POST {{baseUrl}}/users/import
+Content-Type: multipart/form-data
+
+### Очистка корзин
+DELETE {{baseUrl}}/carts/clear-empty
+
+### Резервное копирование
+POST {{baseUrl}}/backup
+
+### Восстановление
+POST {{baseUrl}}/restore
+Content-Type: application/json
+
+{
+  "backup_id": "backup_20251002"
+}
