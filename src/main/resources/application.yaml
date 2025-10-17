@@ -3,36 +3,70 @@ server:
   servlet:
     context-path:
       /backservices
+  # Оптимизация для production
+  tomcat:
+    threads:
+      max: 200
+      min-spare: 10
+    accept-count: 100
+    max-connections: 8192
 
 spring:
   application:
     name: back-services-kotlin
 
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/postgres}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
+    # Connection pool оптимизация для HikariCP
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 20000
+      idle-timeout: 300000
+      max-lifetime: 1200000
+      leak-detection-threshold: 60000
 
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false  # Отключаем в production для производительности
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true
+        format_sql: false
+        # Batch processing для оптимизации
+        jdbc:
+          batch_size: 20
+          fetch_size: 50
+        order_inserts: true
+        order_updates: true
+        # Second-level cache
+        cache:
+          use_second_level_cache: false
+          use_query_cache: false
+        # Статистика (отключаем в production)
+        generate_statistics: false
 
   jackson:
     property-naming-strategy: SNAKE_CASE
     serialization:
       write-dates-as-timestamps: false
 
+  # Кэширование
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=500,expireAfterWrite=5m
+
 logging:
   level:
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-    org.springframework.web: DEBUG
+    org.hibernate.SQL: WARN  # Меняем на WARN для production
+    org.hibernate.type.descriptor.sql.BasicBinder: WARN
+    org.springframework.web: INFO
+    suai.vladislav.backserviceskotlin: INFO
 
 springdoc:
   api-docs:
