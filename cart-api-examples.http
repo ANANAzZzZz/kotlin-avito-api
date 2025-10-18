@@ -1,0 +1,99 @@
+### Примеры HTTP-запросов для работы с корзиной
+
+### 1. Получить корзину пользователя с группировкой по магазинам
+GET http://localhost:8080/api/carts/1/with-advertisements
+Accept: application/json
+
+###
+
+### 2. Получить корзину по ID пользователя
+GET http://localhost:8080/api/carts/user/1
+Accept: application/json
+
+###
+
+### 3. Добавить товар в корзину (с количеством)
+POST http://localhost:8080/api/carts/add-advertisement
+Content-Type: application/json
+
+{
+  "cartId": 1,
+  "advertisementId": 1,
+  "quantity": 2
+}
+
+###
+
+### 4. Обновить количество товара в корзине
+PATCH http://localhost:8080/api/carts/1/items/1
+Content-Type: application/json
+
+{
+  "quantity": 5
+}
+
+###
+
+### 5. Изменить выбор товара (checkbox)
+PATCH http://localhost:8080/api/carts/1/items/1
+Content-Type: application/json
+
+{
+  "selected": false
+}
+
+###
+
+### 6. Обновить количество и выбор одновременно
+PATCH http://localhost:8080/api/carts/1/items/1
+Content-Type: application/json
+
+{
+  "quantity": 3,
+  "selected": true
+}
+
+###
+
+### 7. Получить рекомендуемые товары для корзины
+GET http://localhost:8080/api/carts/1/recommendations?limit=10
+Accept: application/json
+
+###
+
+### 8. Удалить товар из корзины
+DELETE http://localhost:8080/api/carts/1/advertisements/1
+
+###
+
+### 9. Создать корзину для пользователя
+POST http://localhost:8080/api/carts?userId=1
+Content-Type: application/json
+
+###
+
+### 10. Создать новое объявление с ценой
+POST http://localhost:8080/api/advertisements
+Content-Type: application/json
+
+{
+  "name": "iPhone 15 Pro",
+  "description": "Новый iPhone в отличном состоянии",
+  "price": 89999.99,
+  "ownerId": 1
+}
+
+###
+
+### 11. Обновить объявление (включая цену)
+PATCH http://localhost:8080/api/advertisements/1
+Content-Type: application/json
+
+{
+  "name": "iPhone 15 Pro Max",
+  "description": "Обновленное описание",
+  "price": 99999.99
+}
+
+###
+

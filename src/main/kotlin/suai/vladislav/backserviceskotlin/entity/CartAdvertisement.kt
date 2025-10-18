@@ -1,6 +1,7 @@
 package suai.vladislav.backserviceskotlin.entity
 
 import jakarta.persistence.*
+import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotNull
 
 @Entity
@@ -18,5 +19,12 @@ data class CartAdvertisement(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "advertisement_id", nullable = false)
     @NotNull
-    val advertisement: Advertisement
+    val advertisement: Advertisement,
+
+    @Column(nullable = false)
+    @Min(1)
+    var quantity: Int = 1,
+
+    @Column(nullable = false)
+    var selected: Boolean = true
 )

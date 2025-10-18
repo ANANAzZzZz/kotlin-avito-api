@@ -11,4 +11,6 @@ interface CartService {
     fun addAdvertisementToCart(addToCartDto: AddToCartDto): CartAdvertisementDto
     fun removeAdvertisementFromCart(cartId: Long, advertisementId: Long)
     fun getCartWithAdvertisements(cartId: Long): CartDto
+    fun updateCartItem(cartId: Long, advertisementId: Long, updateDto: UpdateCartItemDto): CartAdvertisementDto
+    fun getRecommendedAdvertisements(cartId: Long, limit: Int = 10): List<AdvertisementDto>
 }

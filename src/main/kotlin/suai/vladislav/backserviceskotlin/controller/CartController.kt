@@ -35,9 +35,18 @@ class CartController(
     }
 
     @GetMapping("/{id}/with-advertisements")
-    @Operation(summary = "Get cart with all advertisements")
+    @Operation(summary = "Get cart with all advertisements grouped by shops")
     fun getCartWithAdvertisements(@PathVariable id: Long): ResponseEntity<CartDto> {
         return ResponseEntity.ok(cartService.getCartWithAdvertisements(id))
+    }
+
+    @GetMapping("/{id}/recommendations")
+    @Operation(summary = "Get recommended advertisements for cart")
+    fun getRecommendedAdvertisements(
+        @PathVariable id: Long,
+        @RequestParam(defaultValue = "10") limit: Int
+    ): ResponseEntity<List<AdvertisementDto>> {
+        return ResponseEntity.ok(cartService.getRecommendedAdvertisements(id, limit))
     }
 
     @PostMapping
@@ -52,6 +61,17 @@ class CartController(
     fun addAdvertisementToCart(@Valid @RequestBody addToCartDto: AddToCartDto): ResponseEntity<CartAdvertisementDto> {
         val cartAdvertisement = cartService.addAdvertisementToCart(addToCartDto)
         return ResponseEntity.status(HttpStatus.CREATED).body(cartAdvertisement)
+    }
+
+    @PatchMapping("/{cartId}/items/{advertisementId}")
+    @Operation(summary = "Update cart item (quantity or selection)")
+    fun updateCartItem(
+        @PathVariable cartId: Long,
+        @PathVariable advertisementId: Long,
+        @Valid @RequestBody updateDto: UpdateCartItemDto
+    ): ResponseEntity<CartAdvertisementDto> {
+        val updatedItem = cartService.updateCartItem(cartId, advertisementId, updateDto)
+        return ResponseEntity.ok(updatedItem)
     }
 
     @DeleteMapping("/{cartId}/advertisements/{advertisementId}")

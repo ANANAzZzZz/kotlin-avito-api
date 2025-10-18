@@ -9,11 +9,13 @@ import suai.vladislav.backserviceskotlin.entity.Cart
 import suai.vladislav.backserviceskotlin.entity.CartAdvertisement
 import suai.vladislav.backserviceskotlin.exception.ResourceNotFoundException
 import suai.vladislav.backserviceskotlin.exception.ResourceAlreadyExistsException
+import suai.vladislav.backserviceskotlin.exception.InvalidRequestException
 import suai.vladislav.backserviceskotlin.repository.CartRepository
 import suai.vladislav.backserviceskotlin.repository.CartAdvertisementRepository
 import suai.vladislav.backserviceskotlin.repository.UserRepository
 import suai.vladislav.backserviceskotlin.repository.AdvertisementRepository
 import suai.vladislav.backserviceskotlin.service.CartService
+import java.math.BigDecimal
 
 @Service
 @Transactional(readOnly = true)
@@ -46,7 +48,6 @@ class CartServiceImpl(
         val user = userRepository.findById(userId)
             .orElseThrow { ResourceNotFoundException("User not found with id: $userId") }
 
-        // Проверяем, что у пользователя еще нет корзины
         if (cartRepository.findByUserId(userId).isPresent) {
             throw ResourceAlreadyExistsException("Cart already exists for user with id: $userId")
         }
@@ -74,13 +75,23 @@ class CartServiceImpl(
             .orElseThrow { ResourceNotFoundException("Advertisement not found with id: ${addToCartDto.advertisementId}") }
 
         // Проверяем, что объявление еще не добавлено в корзину
-        if (cartAdvertisementRepository.findByCartIdAndAdvertisementId(addToCartDto.cartId, addToCartDto.advertisementId).isPresent) {
-            throw ResourceAlreadyExistsException("Advertisement already exists in cart")
+        val existingItem = cartAdvertisementRepository.findByCartIdAndAdvertisementId(
+            addToCartDto.cartId,
+            addToCartDto.advertisementId
+        )
+
+        if (existingItem.isPresent) {
+            // Если товар уже есть, увеличиваем количество
+            val item = existingItem.get()
+            item.quantity += addToCartDto.quantity
+            return cartAdvertisementRepository.save(item).toDto()
         }
 
         val cartAdvertisement = CartAdvertisement(
             cart = cart,
-            advertisement = advertisement
+            advertisement = advertisement,
+            quantity = addToCartDto.quantity,
+            selected = true
         )
 
         return cartAdvertisementRepository.save(cartAdvertisement).toDto()
@@ -95,34 +106,131 @@ class CartServiceImpl(
         cartAdvertisementRepository.deleteByCartIdAndAdvertisementId(cartId, advertisementId)
     }
 
+    @Transactional
+    @CacheEvict(value = ["cartWithAdvertisements", "cartById", "cartByUser"], allEntries = true)
+    override fun updateCartItem(cartId: Long, advertisementId: Long, updateDto: UpdateCartItemDto): CartAdvertisementDto {
+        val cartItem = cartAdvertisementRepository.findByCartIdAndAdvertisementId(cartId, advertisementId)
+            .orElseThrow { ResourceNotFoundException("Cart item not found") }
+
+        updateDto.quantity?.let {
+            if (it < 1) {
+                throw InvalidRequestException("Quantity must be at least 1")
+            }
+            cartItem.quantity = it
+        }
+        updateDto.selected?.let { cartItem.selected = it }
+
+        return cartAdvertisementRepository.save(cartItem).toDto()
+    }
+
     @Cacheable(value = ["cartWithAdvertisements"], key = "#cartId")
     override fun getCartWithAdvertisements(cartId: Long): CartDto {
-        val cart = cartRepository.findByIdWithAdvertisements(cartId)
+        val cart = cartRepository.findById(cartId)
             .orElseThrow { ResourceNotFoundException("Cart not found with id: $cartId") }
 
-        val advertisements = cartAdvertisementRepository.findByCartIdWithAdvertisement(cartId)
-            .map { it.advertisement.toAdvertisementDto() }
+        val cartItems = cartAdvertisementRepository.findByCartIdWithAdvertisement(cartId)
 
-        return cart.toDto().copy(advertisements = advertisements)
+        // Группируем товары по магазинам (владельцам)
+        val shopGroups = cartItems
+            .groupBy { it.advertisement.owner.id }
+            .mapValues { (ownerId, items) ->
+                val owner = items.first().advertisement.owner
+                val cartItemDtos = items.map { cartItem ->
+                    val itemTotal = cartItem.advertisement.price.multiply(BigDecimal(cartItem.quantity))
+                    CartItemDto(
+                        id = cartItem.id,
+                        advertisementId = cartItem.advertisement.id,
+                        name = cartItem.advertisement.name,
+                        description = cartItem.advertisement.description,
+                        price = cartItem.advertisement.price,
+                        quantity = cartItem.quantity,
+                        selected = cartItem.selected,
+                        itemTotal = itemTotal
+                    )
+                }
+
+                val shopTotal = cartItemDtos
+                    .filter { it.selected }
+                    .fold(BigDecimal.ZERO) { acc, item -> acc.add(item.itemTotal) }
+
+                ShopCartGroup(
+                    shopId = ownerId,
+                    shopName = "${owner.firstName} ${owner.lastName}",
+                    items = cartItemDtos,
+                    shopTotal = shopTotal
+                )
+            }
+
+        // Подсчитываем общую сумму только по выбранным товарам
+        val totalAmount = shopGroups.values
+            .sumOf { it.shopTotal }
+
+        val selectedItemsCount = cartItems.count { it.selected }
+        val totalItemsCount = cartItems.size
+
+        return CartDto(
+            id = cart.id,
+            userId = cart.user.id,
+            shopGroups = shopGroups,
+            totalAmount = totalAmount,
+            selectedItemsCount = selectedItemsCount,
+            totalItemsCount = totalItemsCount
+        )
+    }
+
+    @Cacheable(value = ["recommendedAdvertisements"], key = "#cartId + '_' + #limit")
+    override fun getRecommendedAdvertisements(cartId: Long, limit: Int): List<AdvertisementDto> {
+        val cart = cartRepository.findById(cartId)
+            .orElseThrow { ResourceNotFoundException("Cart not found with id: $cartId") }
+
+        // Получаем ID товаров, которые уже в корзине
+        val cartAdvertisementIds = cartAdvertisementRepository.findByCartId(cartId)
+            .map { it.advertisement.id }
+            .toSet()
+
+        // Получаем ID владельцев товаров в корзине для рекомендаций от тех же продавцов
+        val ownerIds = cartAdvertisementRepository.findByCartIdWithAdvertisement(cartId)
+            .map { it.advertisement.owner.id }
+            .toSet()
+
+        // Ищем товары от тех же продавцов, которых нет в корзине
+        val recommendations = if (ownerIds.isNotEmpty()) {
+            advertisementRepository.findAll()
+                .filter { it.owner.id in ownerIds && it.id !in cartAdvertisementIds }
+                .take(limit)
+        } else {
+            // Если корзина пуста, возвращаем случайные товары
+            advertisementRepository.findAll()
+                .shuffled()
+                .take(limit)
+        }
+
+        return recommendations.map { it.toAdvertisementDto() }
     }
 
     private fun Cart.toDto() = CartDto(
         id = id,
         userId = user.id,
-        advertisements = emptyList()
+        shopGroups = emptyMap(),
+        totalAmount = BigDecimal.ZERO,
+        selectedItemsCount = 0,
+        totalItemsCount = 0
     )
 
     private fun CartAdvertisement.toDto() = CartAdvertisementDto(
         id = id,
         cartId = cart.id,
         advertisementId = advertisement.id,
-        advertisement = advertisement.toAdvertisementDto()
+        advertisement = advertisement.toAdvertisementDto(),
+        quantity = quantity,
+        selected = selected
     )
 
     private fun suai.vladislav.backserviceskotlin.entity.Advertisement.toAdvertisementDto() = AdvertisementDto(
         id = id,
         name = name,
         description = description,
+        price = price,
         ownerId = owner.id,
         ownerName = "${owner.firstName} ${owner.lastName}"
     )
