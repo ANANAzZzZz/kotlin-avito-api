@@ -131,10 +131,10 @@ class CartServiceImpl(
 
         val cartItems = cartAdvertisementRepository.findByCartIdWithAdvertisement(cartId)
 
-        // Группируем товары по магазинам (владельцам)
+        // Группируем товары по магазинам (владельцам) и формируем список
         val shopGroups = cartItems
             .groupBy { it.advertisement.owner.id }
-            .mapValues { (ownerId, items) ->
+            .map { (ownerId, items) ->
                 val owner = items.first().advertisement.owner
                 val cartItemDtos = items.map { cartItem ->
                     val itemTotal = cartItem.advertisement.price.multiply(BigDecimal(cartItem.quantity))
@@ -163,7 +163,7 @@ class CartServiceImpl(
             }
 
         // Подсчитываем общую сумму только по выбранным товарам
-        val totalAmount = shopGroups.values
+        val totalAmount = shopGroups
             .sumOf { it.shopTotal }
 
         val selectedItemsCount = cartItems.count { it.selected }
@@ -217,7 +217,7 @@ class CartServiceImpl(
     private fun Cart.toDto() = CartDto(
         id = id,
         userId = user.id,
-        shopGroups = emptyMap(),
+        shopGroups = emptyList(),
         totalAmount = BigDecimal.ZERO,
         selectedItemsCount = 0,
         totalItemsCount = 0

@@ -8,7 +8,7 @@ data class CartDto(
     val id: Long? = null,
     @field:NotNull
     val userId: Long,
-    val shopGroups: Map<Long, ShopCartGroup> = emptyMap(),
+    val shopGroups: List<ShopCartGroup> = emptyList(),
     val totalAmount: BigDecimal = BigDecimal.ZERO,
     val selectedItemsCount: Int = 0,
     val totalItemsCount: Int = 0
