@@ -48,7 +48,8 @@ class CacheConfig {
             "carts",
             "cartById",
             "cartByUser",
-            "cartWithAdvertisements"
+            "cartWithAdvertisements",
+            "recommendedAdvertisements"
         )
         cacheManager.setCaffeine(caffeineCacheBuilder())
         return cacheManager

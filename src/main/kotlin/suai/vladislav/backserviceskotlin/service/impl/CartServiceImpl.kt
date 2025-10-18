@@ -4,6 +4,7 @@ import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.data.domain.PageRequest
 import suai.vladislav.backserviceskotlin.dto.*
 import suai.vladislav.backserviceskotlin.entity.Cart
 import suai.vladislav.backserviceskotlin.entity.CartAdvertisement
@@ -180,13 +181,22 @@ class CartServiceImpl(
 
     @Cacheable(value = ["recommendedAdvertisements"], key = "#cartId + '_' + #limit")
     override fun getRecommendedAdvertisements(cartId: Long, limit: Int): List<AdvertisementDto> {
-        val cart = cartRepository.findById(cartId)
-            .orElseThrow { ResourceNotFoundException("Cart not found with id: $cartId") }
+        // Проверяем существование корзины
+        if (!cartRepository.existsById(cartId)) {
+            throw ResourceNotFoundException("Cart not found with id: $cartId")
+        }
 
         // Получаем ID товаров, которые уже в корзине
         val cartAdvertisementIds = cartAdvertisementRepository.findByCartId(cartId)
             .map { it.advertisement.id }
             .toSet()
+
+        // Если корзина пуста, возвращаем случайные товары
+        if (cartAdvertisementIds.isEmpty()) {
+            val pageable = PageRequest.of(0, limit)
+            return advertisementRepository.findRandomExcludingIds(emptySet(), pageable)
+                .map { it.toAdvertisementDto() }
+        }
 
         // Получаем ID владельцев товаров в корзине для рекомендаций от тех же продавцов
         val ownerIds = cartAdvertisementRepository.findByCartIdWithAdvertisement(cartId)
@@ -194,15 +204,11 @@ class CartServiceImpl(
             .toSet()
 
         // Ищем товары от тех же продавцов, которых нет в корзине
+        val pageable = PageRequest.of(0, limit)
         val recommendations = if (ownerIds.isNotEmpty()) {
-            advertisementRepository.findAll()
-                .filter { it.owner.id in ownerIds && it.id !in cartAdvertisementIds }
-                .take(limit)
+            advertisementRepository.findByOwnerIdsNotInIds(ownerIds, cartAdvertisementIds, pageable)
         } else {
-            // Если корзина пуста, возвращаем случайные товары
-            advertisementRepository.findAll()
-                .shuffled()
-                .take(limit)
+            advertisementRepository.findRandomExcludingIds(cartAdvertisementIds, pageable)
         }
 
         return recommendations.map { it.toAdvertisementDto() }

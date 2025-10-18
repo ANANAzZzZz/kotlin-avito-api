@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import suai.vladislav.backserviceskotlin.entity.Advertisement
 import suai.vladislav.backserviceskotlin.entity.User
+import org.springframework.data.domain.Pageable
 
 @Repository
 interface AdvertisementRepository : JpaRepository<Advertisement, Long> {
@@ -40,4 +41,17 @@ interface AdvertisementRepository : JpaRepository<Advertisement, Long> {
 
     @Query("SELECT a FROM Advertisement a WHERE LOWER(a.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(a.description) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     fun searchByKeyword(@Param("keyword") keyword: String): List<Advertisement>
+
+    @Query("SELECT a FROM Advertisement a JOIN FETCH a.owner WHERE a.owner.id IN :ownerIds AND a.id NOT IN :excludeIds")
+    fun findByOwnerIdsNotInIds(
+        @Param("ownerIds") ownerIds: Set<Long>,
+        @Param("excludeIds") excludeIds: Set<Long>,
+        pageable: Pageable
+    ): List<Advertisement>
+
+    @Query("SELECT a FROM Advertisement a JOIN FETCH a.owner WHERE a.id NOT IN :excludeIds")
+    fun findRandomExcludingIds(
+        @Param("excludeIds") excludeIds: Set<Long>,
+        pageable: Pageable
+    ): List<Advertisement>
 }
