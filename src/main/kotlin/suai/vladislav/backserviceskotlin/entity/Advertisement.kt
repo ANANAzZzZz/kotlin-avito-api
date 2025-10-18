@@ -23,6 +23,9 @@ data class Advertisement(
     @Column(nullable = false, precision = 10, scale = 2)
     val price: BigDecimal = BigDecimal.ZERO,
 
+    @Column(name = "image_url", length = 2048)
+    val imageUrl: String? = null,
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
     @NotNull

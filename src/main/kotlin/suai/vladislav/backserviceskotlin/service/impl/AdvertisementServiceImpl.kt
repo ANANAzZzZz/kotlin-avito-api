@@ -51,6 +51,7 @@ class AdvertisementServiceImpl(
             name = advertisementCreateDto.name,
             description = advertisementCreateDto.description,
             price = advertisementCreateDto.price,
+            imageUrl = advertisementCreateDto.imageUrl,
             owner = owner
         )
 
@@ -66,7 +67,8 @@ class AdvertisementServiceImpl(
         val updatedAdvertisement = existingAdvertisement.copy(
             name = advertisementUpdateDto.name ?: existingAdvertisement.name,
             description = advertisementUpdateDto.description ?: existingAdvertisement.description,
-            price = advertisementUpdateDto.price ?: existingAdvertisement.price
+            price = advertisementUpdateDto.price ?: existingAdvertisement.price,
+            imageUrl = advertisementUpdateDto.imageUrl ?: existingAdvertisement.imageUrl
         )
 
         return advertisementRepository.save(updatedAdvertisement).toDto()
@@ -87,6 +89,7 @@ class AdvertisementServiceImpl(
         description = description,
         price = price,
         ownerId = owner.id,
-        ownerName = "${owner.firstName} ${owner.lastName}"
+        ownerName = "${owner.firstName} ${owner.lastName}",
+        imageUrl = imageUrl
     )
 }

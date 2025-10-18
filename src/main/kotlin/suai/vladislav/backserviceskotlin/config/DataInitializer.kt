@@ -129,121 +129,161 @@ class DataInitializer(
         val ad1 = Advertisement(
             name = "iPhone 15 Pro",
             description = "Новый iPhone 15 Pro в отличном состоянии. Комплект полный.",
-            owner = savedUser1
+            owner = savedUser1,
+            imageUrl = "https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=800",
+            price = 100000.00.toBigDecimal()
         )
 
         val ad2 = Advertisement(
             name = "MacBook Air M2",
             description = "Ноутбук Apple MacBook Air с чипом M2, 8GB RAM, 256GB SSD",
-            owner = savedUser1
+            owner = savedUser1,
+            imageUrl = "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800",
+            price = 200000.00.toBigDecimal()
         )
 
         val ad3 = Advertisement(
             name = "Samsung Galaxy S24",
             description = "Флагманский смартфон Samsung с отличной камерой",
-            owner = savedUser2
+            owner = savedUser2,
+            imageUrl = "https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=800",
+            price = 90000.00.toBigDecimal()
         )
 
         val ad4 = Advertisement(
             name = "iPad Pro 12.9",
             description = "Планшет Apple iPad Pro 12.9 дюймов, 256GB, Wi-Fi + Cellular",
-            owner = savedUser2
+            owner = savedUser2,
+            imageUrl = "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=800",
+            price = 120000.00.toBigDecimal()
         )
 
         val ad5 = Advertisement(
             name = "Sony PlayStation 5",
             description = "Игровая консоль Sony PlayStation 5, disc edition, 2 геймпада в комплекте",
-            owner = savedUser3
+            owner = savedUser3,
+            imageUrl = "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=800",
+            price = 50000.00.toBigDecimal()
         )
 
         val ad6 = Advertisement(
             name = "MacBook Pro 16",
             description = "Apple MacBook Pro 16 с процессором M3 Pro, 32GB RAM, 1TB SSD. Идеальное состояние.",
-            owner = savedUser3
+            owner = savedUser3,
+            imageUrl = "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800",
+            price = 250000.00.toBigDecimal()
         )
 
         val ad7 = Advertisement(
             name = "Nintendo Switch OLED",
             description = "Nintendo Switch OLED модель, белого цвета, полный комплект + 3 игры",
-            owner = savedUser4
+            owner = savedUser4,
+            imageUrl = "https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?w=800",
+            price = 40000.00.toBigDecimal()
         )
 
         val ad8 = Advertisement(
             name = "AirPods Pro 2",
             description = "Беспроводные наушники Apple AirPods Pro 2-го поколения с USB-C",
-            owner = savedUser4
+            owner = savedUser4,
+            imageUrl = "https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=800",
+            price = 20000.00.toBigDecimal()
         )
 
         val ad9 = Advertisement(
             name = "Samsung 4K TV 55\"",
             description = "Телевизор Samsung 55 дюймов, 4K UHD, Smart TV, HDR10+",
-            owner = savedUser5
+            owner = savedUser5,
+            imageUrl = "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=800",
+            price = 80000.00.toBigDecimal()
         )
 
         val ad10 = Advertisement(
             name = "Dell XPS 15",
             description = "Ноутбук Dell XPS 15, Intel i7, 16GB RAM, 512GB SSD, NVIDIA GTX 1650",
-            owner = savedUser5
+            owner = savedUser5,
+            imageUrl = "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800",
+            price = 150000.00.toBigDecimal()
         )
 
         val ad11 = Advertisement(
             name = "Canon EOS R6",
             description = "Беззеркальная камера Canon EOS R6 с объективом RF 24-105mm",
-            owner = savedUser6
+            owner = savedUser6,
+            imageUrl = "https://images.unsplash.com/photo-1606983340126-99ab4feaa64-8?w=800",
+            price = 180000.00.toBigDecimal()
         )
 
         val ad12 = Advertisement(
             name = "DJI Mavic Air 2",
             description = "Квадрокоптер DJI Mavic Air 2 с 4K камерой, запасные аккумуляторы в комплекте",
-            owner = savedUser6
+            owner = savedUser6,
+            imageUrl = "https://images.unsplash.com/photo-1473968512647-3e447244af8f?w=800",
+            price = 90000.00.toBigDecimal()
         )
 
         val ad13 = Advertisement(
             name = "Apple Watch Series 9",
             description = "Умные часы Apple Watch Series 9, 45mm, GPS + Cellular, титановый корпус",
-            owner = savedUser7
+            owner = savedUser7,
+            imageUrl = "https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?w=800",
+            price = 60000.00.toBigDecimal()
         )
 
         val ad14 = Advertisement(
             name = "Dyson V15 Detect",
             description = "Беспроводной пылесос Dyson V15 Detect, полный комплект насадок",
-            owner = savedUser7
+            owner = savedUser7,
+            imageUrl = "https://images.unsplash.com/photo-1558317374-067fb5f30001?w=800",
+            price = 70000.00.toBigDecimal()
         )
 
         val ad15 = Advertisement(
             name = "Kindle Paperwhite",
             description = "Электронная книга Amazon Kindle Paperwhite 11-го поколения, 16GB",
-            owner = savedUser8
+            owner = savedUser8,
+            imageUrl = "https://images.unsplash.com/photo-1592496431122-2349e0fbc666?w=800",
+            price = 15000.00.toBigDecimal()
         )
 
         val ad16 = Advertisement(
             name = "GoPro Hero 12 Black",
             description = "Экшн-камера GoPro Hero 12 Black с аксессуарами для съемки",
-            owner = savedUser8
+            owner = savedUser8,
+            imageUrl = "https://images.unsplash.com/photo-1519638399535-1b036603ac77?w=800",
+            price = 40000.00.toBigDecimal()
         )
 
         val ad17 = Advertisement(
             name = "Xiaomi Mi Band 8",
             description = "Фитнес-браслет Xiaomi Mi Band 8, AMOLED дисплей, водонепроницаемый",
-            owner = savedUser1
+            owner = savedUser1,
+            imageUrl = "https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6?w=800",
+            price = 4000.00.toBigDecimal()
         )
 
         val ad18 = Advertisement(
             name = "Beats Studio Pro",
             description = "Беспроводные наушники Beats Studio Pro с шумоподавлением",
-            owner = savedUser2
+            owner = savedUser2,
+            imageUrl = "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=800",
+            price = 25000.00.toBigDecimal()
         )
 
         val ad19 = Advertisement(
             name = "Lenovo Legion 5 Pro",
             description = "Игровой ноутбук Lenovo Legion 5 Pro, AMD Ryzen 7, RTX 4060, 32GB RAM",
-            owner = savedUser3
+            owner = savedUser3,
+            imageUrl = "https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=800",
+            price = 180000.00.toBigDecimal()
         )
 
         val ad20 = Advertisement(
             name = "Samsung Galaxy Tab S9",
             description = "Планшет Samsung Galaxy Tab S9, 11 дюймов, 256GB, S Pen в комплекте",
-            owner = savedUser4
+            owner = savedUser4,
+            imageUrl = "https://images.unsplash.com/photo-1561154464-82e9adf32764?w=800",
+            price = 70000.00.toBigDecimal()
         )
 
         advertisementRepository.saveAll(listOf(

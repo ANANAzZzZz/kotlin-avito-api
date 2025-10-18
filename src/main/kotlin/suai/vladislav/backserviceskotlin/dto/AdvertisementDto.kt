@@ -2,6 +2,7 @@ package suai.vladislav.backserviceskotlin.dto
 
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
+import org.hibernate.validator.constraints.URL
 import java.math.BigDecimal
 
 data class AdvertisementDto(
@@ -13,7 +14,9 @@ data class AdvertisementDto(
     val price: BigDecimal = BigDecimal.ZERO,
     @field:NotNull
     val ownerId: Long,
-    val ownerName: String? = null
+    val ownerName: String? = null,
+    @field:URL
+    val imageUrl: String? = null
 )
 
 data class AdvertisementCreateDto(
@@ -23,11 +26,15 @@ data class AdvertisementCreateDto(
     val description: String,
     val price: BigDecimal = BigDecimal.ZERO,
     @field:NotNull
-    val ownerId: Long
+    val ownerId: Long,
+    @field:URL
+    val imageUrl: String? = null
 )
 
 data class AdvertisementUpdateDto(
     val name: String? = null,
     val description: String? = null,
-    val price: BigDecimal? = null
+    val price: BigDecimal? = null,
+    @field:URL
+    val imageUrl: String? = null
 )
