@@ -26,5 +26,8 @@ data class CartAdvertisement(
     var quantity: Int = 1,
 
     @Column(nullable = false)
-    var selected: Boolean = true
+    var selected: Boolean = true,
+
+    @Column(nullable = false)
+    var liked: Boolean = false
 )

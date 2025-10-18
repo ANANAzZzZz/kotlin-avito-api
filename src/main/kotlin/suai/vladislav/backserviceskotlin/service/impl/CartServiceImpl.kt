@@ -120,6 +120,7 @@ class CartServiceImpl(
             cartItem.quantity = it
         }
         updateDto.selected?.let { cartItem.selected = it }
+        updateDto.liked?.let { cartItem.liked = it }
 
         return cartAdvertisementRepository.save(cartItem).toDto()
     }
@@ -146,6 +147,7 @@ class CartServiceImpl(
                         price = cartItem.advertisement.price,
                         quantity = cartItem.quantity,
                         selected = cartItem.selected,
+                        liked = cartItem.liked,
                         itemTotal = itemTotal
                     )
                 }
@@ -157,6 +159,7 @@ class CartServiceImpl(
                 ShopCartGroup(
                     shopId = ownerId,
                     shopName = "${owner.firstName} ${owner.lastName}",
+                    shopRating = owner.rating,
                     items = cartItemDtos,
                     shopTotal = shopTotal
                 )
@@ -229,7 +232,8 @@ class CartServiceImpl(
         advertisementId = advertisement.id,
         advertisement = advertisement.toAdvertisementDto(),
         quantity = quantity,
-        selected = selected
+        selected = selected,
+        liked = liked
     )
 
     private fun suai.vladislav.backserviceskotlin.entity.Advertisement.toAdvertisementDto() = AdvertisementDto(

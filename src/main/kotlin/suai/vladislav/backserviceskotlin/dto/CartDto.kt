@@ -17,6 +17,7 @@ data class CartDto(
 data class ShopCartGroup(
     val shopId: Long,
     val shopName: String,
+    val shopRating: Float,
     val items: List<CartItemDto>,
     val shopTotal: BigDecimal = BigDecimal.ZERO
 )
@@ -29,6 +30,7 @@ data class CartItemDto(
     val price: BigDecimal,
     var quantity: Int = 1,
     var selected: Boolean = true,
+    var liked: Boolean = false,
     val itemTotal: BigDecimal = BigDecimal.ZERO
 )
 
@@ -40,7 +42,8 @@ data class CartAdvertisementDto(
     val advertisementId: Long,
     val advertisement: AdvertisementDto? = null,
     var quantity: Int = 1,
-    var selected: Boolean = true
+    var selected: Boolean = true,
+    var liked: Boolean = false
 )
 
 data class AddToCartDto(
@@ -55,5 +58,6 @@ data class AddToCartDto(
 data class UpdateCartItemDto(
     @field:Min(1)
     val quantity: Int? = null,
-    val selected: Boolean? = null
+    val selected: Boolean? = null,
+    val liked: Boolean? = null
 )
