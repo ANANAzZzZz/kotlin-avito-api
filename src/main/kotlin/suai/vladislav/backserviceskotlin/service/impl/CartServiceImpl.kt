@@ -243,6 +243,7 @@ class CartServiceImpl(
         description = description,
         price = price,
         ownerId = owner.id,
-        ownerName = "${owner.firstName} ${owner.lastName}"
+        ownerName = "${owner.firstName} ${owner.lastName}",
+        imageUrl = imageUrl
     )
 }
