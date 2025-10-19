@@ -11,3 +11,14 @@ ADD COLUMN IF NOT EXISTS rating REAL NOT NULL DEFAULT 0.0;
 -- Добавляем поле image_url в таблицу advertisements
 ALTER TABLE advertisements
 ADD COLUMN IF NOT EXISTS image_url VARCHAR(2048);
+
+-- Создаем таблицу products
+CREATE TABLE IF NOT EXISTS products (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    total_screens INT NOT NULL,
+    total_components INT NOT NULL,
+    workflow JSONB,
+    workflow_id VARCHAR(255) NOT NULL
+);

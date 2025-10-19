@@ -14,7 +14,8 @@ class DataInitializer(
     private val paymentMethodRepository: PaymentMethodRepository,
     private val shippingMethodRepository: ShippingMethodRepository,
     private val shipRepository: ShipRepository,
-    private val cartAdvertisementRepository: CartAdvertisementRepository
+    private val cartAdvertisementRepository: CartAdvertisementRepository,
+    private val productRepository: ProductRepository
 ) : CommandLineRunner {
 
     override fun run(vararg args: String?) {

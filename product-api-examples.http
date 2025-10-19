@@ -1,0 +1,67 @@
+### Product API Examples
+
+### Получить все продукты
+GET http://localhost:8080/api/products
+Accept: application/json
+
+###
+
+### Получить продукт по ID
+GET http://localhost:8080/api/products/1
+Accept: application/json
+
+###
+
+### Получить продукты по workflow ID
+GET http://localhost:8080/api/products/workflow/workflow-123
+Accept: application/json
+
+###
+
+### Создать новый продукт
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+  "name": "Mobile App Design",
+  "description": "Complete mobile application design with screens and components",
+  "totalScreens": 15,
+  "totalComponents": 42,
+  "workflow": "{\"stages\": [\"design\", \"review\", \"approval\"], \"currentStage\": \"design\"}",
+  "workflowId": "workflow-123"
+}
+
+###
+
+### Обновить продукт (частичное обновление)
+PUT http://localhost:8080/api/products/1
+Content-Type: application/json
+
+{
+  "name": "Updated Mobile App Design",
+  "totalScreens": 20,
+  "totalComponents": 50
+}
+
+###
+
+### Обновить продукт (полное обновление)
+PUT http://localhost:8080/api/products/1
+Content-Type: application/json
+
+{
+  "name": "Complete Mobile App Design",
+  "description": "Updated complete mobile application design",
+  "totalScreens": 25,
+  "totalComponents": 60,
+  "workflow": "{\"stages\": [\"design\", \"review\", \"approval\", \"production\"], \"currentStage\": \"review\"}",
+  "workflowId": "workflow-456"
+}
+
+###
+
+### Удалить продукт
+DELETE http://localhost:8080/api/products/1
+
+###
+
