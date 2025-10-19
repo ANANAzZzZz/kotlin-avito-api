@@ -306,42 +306,50 @@ class DataInitializer(
         // Создаем способы оплаты с рабочими URL картинок
         val creditCard = PaymentMethod(
             name = "Банковская карта",
-            image = "https://cdn-icons-png.flaticon.com/512/1611/1611179.png"
+            image = "https://cdn-icons-png.flaticon.com/512/1611/1611179.png",
+            description = "Оплата банковской картой Visa, MasterCard или МИР"
         )
 
         val cash = PaymentMethod(
             name = "Наличные",
-            image = "https://cdn-icons-png.flaticon.com/512/639/639365.png"
+            image = "https://cdn-icons-png.flaticon.com/512/639/639365.png",
+            description = "Оплата наличными при получении товара"
         )
 
         val paypal = PaymentMethod(
             name = "PayPal",
-            image = "https://cdn-icons-png.flaticon.com/512/174/174861.png"
+            image = "https://cdn-icons-png.flaticon.com/512/174/174861.png",
+            description = "Быстрая и безопасная оплата через PayPal"
         )
 
         val sbp = PaymentMethod(
             name = "СБП (Система быстрых платежей)",
-            image = "https://upload.wikimedia.org/wikipedia/ru/thumb/c/c7/%D0%A1%D0%91%D0%9F_%D0%BB%D0%BE%D0%B3%D0%BE%D1%82%D0%B8%D0%BF.svg/1200px-%D0%A1%D0%91%D0%9F_%D0%BB%D0%BE%D0%B3%D0%BE%D1%82%D0%B8%D0%BF.svg.png"
+            image = "https://upload.wikimedia.org/wikipedia/ru/thumb/c/c7/%D0%A1%D0%91%D0%9F_%D0%BB%D0%BE%D0%B3%D0%BE%D1%82%D0%B8%D0%BF.svg/1200px-%D0%A1%D0%91%D0%9F_%D0%BB%D0%BE%D0%B3%D0%BE%D1%82%D0%B8%D0%BF.svg.png",
+            description = "Мгновенные переводы между банками без комиссии"
         )
 
         val yandexPay = PaymentMethod(
             name = "Яндекс.Пей",
-            image = "https://www.gateline.net/wp-content/uploads/Yandex_Pay_logo.png"
+            image = "https://www.gateline.net/wp-content/uploads/Yandex_Pay_logo.png",
+            description = "Оплата через сервис Яндекс.Пей"
         )
 
         val applePay = PaymentMethod(
             name = "Apple Pay",
-            image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWxYUQvdwKXZ9meVu4Jx6fr7nNNo99TLl-bA&s"
+            image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWxYUQvdwKXZ9meVu4Jx6fr7nNNo99TLl-bA&s",
+            description = "Быстрая оплата с устройств Apple"
         )
 
         val googlePay = PaymentMethod(
             name = "Google Pay",
-            image = "https://cdn-icons-png.flaticon.com/512/6124/6124998.png"
+            image = "https://cdn-icons-png.flaticon.com/512/6124/6124998.png",
+            description = "Безопасная оплата через Google Pay"
         )
 
         val crypto = PaymentMethod(
             name = "Криптовалюта",
-            image = "https://cdn-icons-png.flaticon.com/512/825/825508.png"
+            image = "https://cdn-icons-png.flaticon.com/512/825/825508.png",
+            description = "Оплата Bitcoin, Ethereum и другими криптовалютами"
         )
 
         val savedCreditCard = paymentMethodRepository.save(creditCard)
@@ -356,46 +364,64 @@ class DataInitializer(
         // Создаем способы доставки
         val courier = ShippingMethod(
             name = "Курьерская доставка",
+            badge = "Лучшая цена",
+            deliveryTime = "1-3 дня",
             price = BigDecimal("500.00")
         )
 
         val pickup = ShippingMethod(
             name = "Самовывоз",
+            badge = "Цена",
+            deliveryTime = "1-3 дня",
             price = BigDecimal("0.00")
         )
 
         val express = ShippingMethod(
             name = "Экспресс доставка",
+            badge = "Цена",
+            deliveryTime = "1-3 дня",
             price = BigDecimal("1000.00")
         )
 
         val russianPost = ShippingMethod(
             name = "Почта России",
+            badge = "Лучшая цена",
+            deliveryTime = "1-3 дня",
             price = BigDecimal("300.00")
         )
 
         val cdek = ShippingMethod(
             name = "СДЭК",
+            badge = "Цена",
+            deliveryTime = "1-3 дня",
             price = BigDecimal("400.00")
         )
 
         val boxberry = ShippingMethod(
             name = "Boxberry",
+            badge = "Цена",
+            deliveryTime = "1-3 дня",
             price = BigDecimal("350.00")
         )
 
         val ozon = ShippingMethod(
             name = "Ozon Rocket",
+            badge = "Лучшая цена",
+            deliveryTime = "1-3 дня",
             price = BigDecimal("450.00")
         )
 
         val yandexDelivery = ShippingMethod(
             name = "Яндекс.Доставка",
+            badge = "Цена",
+            deliveryTime = "1-3 дня",
             price = BigDecimal("600.00")
         )
 
         val dpd = ShippingMethod(
             name = "DPD",
+            badge = "Цена",
+            deliveryTime = "1-3 дня",
             price = BigDecimal("550.00")
         )
 

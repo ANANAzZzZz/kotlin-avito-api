@@ -34,7 +34,8 @@ class PaymentMethodServiceImpl(
     override fun create(paymentMethodCreateDto: PaymentMethodCreateDto): PaymentMethodDto {
         val paymentMethod = PaymentMethod(
             name = paymentMethodCreateDto.name,
-            image = paymentMethodCreateDto.image
+            image = paymentMethodCreateDto.image,
+            description = paymentMethodCreateDto.description
         )
         return paymentMethodRepository.save(paymentMethod).toDto()
     }
@@ -47,7 +48,8 @@ class PaymentMethodServiceImpl(
 
         val updatedPaymentMethod = existingPaymentMethod.copy(
             name = paymentMethodUpdateDto.name ?: existingPaymentMethod.name,
-            image = paymentMethodUpdateDto.image ?: existingPaymentMethod.image
+            image = paymentMethodUpdateDto.image ?: existingPaymentMethod.image,
+            description = paymentMethodUpdateDto.description ?: existingPaymentMethod.description
         )
 
         return paymentMethodRepository.save(updatedPaymentMethod).toDto()
@@ -65,6 +67,7 @@ class PaymentMethodServiceImpl(
     private fun PaymentMethod.toDto() = PaymentMethodDto(
         id = id,
         name = name,
-        image = image
+        image = image,
+        description = description
     )
 }

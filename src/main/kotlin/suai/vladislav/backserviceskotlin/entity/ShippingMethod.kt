@@ -20,6 +20,12 @@ data class ShippingMethod(
     @Column(nullable = false, precision = 10, scale = 2)
     val price: BigDecimal,
 
+    @Column(name = "badge", length = 255)
+    val badge: String? = null,
+
+    @Column(name = "delivery_time", length = 255)
+    val deliveryTime: String? = null,
+
     @OneToMany(mappedBy = "shippingMethod", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val ships: MutableList<Ship> = mutableListOf()
 )
