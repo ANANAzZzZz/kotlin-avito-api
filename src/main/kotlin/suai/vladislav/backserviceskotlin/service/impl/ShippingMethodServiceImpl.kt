@@ -43,7 +43,9 @@ class ShippingMethodServiceImpl(
     override fun create(shippingMethodCreateDto: ShippingMethodCreateDto): ShippingMethodDto {
         val shippingMethod = ShippingMethod(
             name = shippingMethodCreateDto.name,
-            price = shippingMethodCreateDto.price
+            price = shippingMethodCreateDto.price,
+            badge = shippingMethodCreateDto.badge,
+            deliveryTime = shippingMethodCreateDto.deliveryTime
         )
         return shippingMethodRepository.save(shippingMethod).toDto()
     }
@@ -56,7 +58,9 @@ class ShippingMethodServiceImpl(
 
         val updatedShippingMethod = existingShippingMethod.copy(
             name = shippingMethodUpdateDto.name ?: existingShippingMethod.name,
-            price = shippingMethodUpdateDto.price ?: existingShippingMethod.price
+            price = shippingMethodUpdateDto.price ?: existingShippingMethod.price,
+            badge = shippingMethodUpdateDto.badge ?: existingShippingMethod.badge,
+            deliveryTime = shippingMethodUpdateDto.deliveryTime ?: existingShippingMethod.deliveryTime
         )
 
         return shippingMethodRepository.save(updatedShippingMethod).toDto()
@@ -74,6 +78,8 @@ class ShippingMethodServiceImpl(
     private fun ShippingMethod.toDto() = ShippingMethodDto(
         id = id,
         name = name,
-        price = price
+        price = price,
+        badge = badge,
+        deliveryTime = deliveryTime
     )
 }

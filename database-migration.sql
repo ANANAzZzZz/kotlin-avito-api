@@ -12,6 +12,15 @@ ADD COLUMN IF NOT EXISTS rating REAL NOT NULL DEFAULT 0.0;
 ALTER TABLE advertisements
 ADD COLUMN IF NOT EXISTS image_url VARCHAR(2048);
 
+-- Добавляем поля badge и delivery_time в таблицу shipping_methods
+ALTER TABLE shipping_methods
+ADD COLUMN IF NOT EXISTS badge VARCHAR(255),
+ADD COLUMN IF NOT EXISTS delivery_time VARCHAR(255);
+
+-- Добавляем поле description в таблицу payment_methods
+ALTER TABLE payment_methods
+ADD COLUMN IF NOT EXISTS description VARCHAR(500);
+
 -- Создаем таблицу products
 CREATE TABLE IF NOT EXISTS products (
     id BIGSERIAL PRIMARY KEY,

@@ -17,6 +17,9 @@ data class PaymentMethod(
     @Column(nullable = true)
     val image: String? = null,
 
+    @Column(name = "description", length = 500)
+    val description: String? = null,
+
     @OneToMany(mappedBy = "paymentMethod", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val ships: MutableList<Ship> = mutableListOf()
 )
