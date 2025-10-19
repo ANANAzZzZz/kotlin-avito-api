@@ -31,7 +31,8 @@ data class CartItemDto(
     var quantity: Int = 1,
     var selected: Boolean = true,
     var liked: Boolean = false,
-    val itemTotal: BigDecimal = BigDecimal.ZERO
+    val itemTotal: BigDecimal = BigDecimal.ZERO,
+    val image_url: String?
 )
 
 data class CartAdvertisementDto(

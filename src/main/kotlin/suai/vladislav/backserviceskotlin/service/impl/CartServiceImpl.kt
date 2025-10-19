@@ -148,7 +148,8 @@ class CartServiceImpl(
                         quantity = cartItem.quantity,
                         selected = cartItem.selected,
                         liked = cartItem.liked,
-                        itemTotal = itemTotal
+                        itemTotal = itemTotal,
+                        image_url = cartItem.advertisement.imageUrl
                     )
                 }
 
