@@ -74,6 +74,17 @@ class CartController(
         return ResponseEntity.ok(updatedItem)
     }
 
+    @PatchMapping("/{cartId}/shops/{shopId}/selection")
+    @Operation(summary = "Update selection for all items from a specific shop")
+    fun updateShopGroupSelection(
+        @PathVariable cartId: Long,
+        @PathVariable shopId: Long,
+        @Valid @RequestBody updateDto: UpdateShopGroupSelectionDto
+    ): ResponseEntity<CartDto> {
+        val updatedCart = cartService.updateShopGroupSelection(cartId, shopId, updateDto.selected)
+        return ResponseEntity.ok(updatedCart)
+    }
+
     @DeleteMapping("/{cartId}/advertisements/{advertisementId}")
     @Operation(summary = "Remove advertisement from cart")
     fun removeAdvertisementFromCart(

@@ -157,12 +157,16 @@ class CartServiceImpl(
                     .filter { it.selected }
                     .fold(BigDecimal.ZERO) { acc, item -> acc.add(item.itemTotal) }
 
+                // Определяем selected для группы: true, если все элементы selected, иначе false
+                val groupSelected = cartItemDtos.all { it.selected }
+
                 ShopCartGroup(
                     shopId = ownerId,
                     shopName = "${owner.firstName} ${owner.lastName}",
                     shopRating = owner.rating,
                     items = cartItemDtos,
-                    shopTotal = shopTotal
+                    shopTotal = shopTotal,
+                    selected = groupSelected
                 )
             }
 
@@ -172,6 +176,80 @@ class CartServiceImpl(
 
         val selectedItemsCount = cartItems.count { it.selected }
         val totalItemsCount = cartItems.size
+
+        return CartDto(
+            id = cart.id,
+            userId = cart.user.id,
+            shopGroups = shopGroups,
+            totalAmount = totalAmount,
+            selectedItemsCount = selectedItemsCount,
+            totalItemsCount = totalItemsCount
+        )
+    }
+
+    @Transactional
+    @CacheEvict(value = ["cartWithAdvertisements", "cartById", "cartByUser"], allEntries = true)
+    override fun updateShopGroupSelection(cartId: Long, shopId: Long, selected: Boolean): CartDto {
+        // Проверяем существование корзины
+        val cart = cartRepository.findById(cartId)
+            .orElseThrow { ResourceNotFoundException("Cart not found with id: $cartId") }
+
+        // Получаем все товары в корзине от конкретного продавца (shopId)
+        val cartItems = cartAdvertisementRepository.findByCartIdWithAdvertisement(cartId)
+            .filter { it.advertisement.owner.id == shopId }
+
+        if (cartItems.isEmpty()) {
+            throw ResourceNotFoundException("No items found in cart for shop with id: $shopId")
+        }
+
+        // Обновляем selected для всех товаров от этого продавца
+        cartItems.forEach { cartItem ->
+            cartItem.selected = selected
+            cartAdvertisementRepository.save(cartItem)
+        }
+
+        // Формируем обновленную корзину вручную, чтобы избежать self-invocation
+        val allCartItems = cartAdvertisementRepository.findByCartIdWithAdvertisement(cartId)
+
+        val shopGroups = allCartItems
+            .groupBy { it.advertisement.owner.id }
+            .map { (ownerId, items) ->
+                val owner = items.first().advertisement.owner
+                val cartItemDtos = items.map { cartItem ->
+                    val itemTotal = cartItem.advertisement.price.multiply(BigDecimal(cartItem.quantity))
+                    CartItemDto(
+                        id = cartItem.id,
+                        advertisementId = cartItem.advertisement.id,
+                        name = cartItem.advertisement.name,
+                        description = cartItem.advertisement.description,
+                        price = cartItem.advertisement.price,
+                        quantity = cartItem.quantity,
+                        selected = cartItem.selected,
+                        liked = cartItem.liked,
+                        itemTotal = itemTotal,
+                        image_url = cartItem.advertisement.imageUrl
+                    )
+                }
+
+                val shopTotal = cartItemDtos
+                    .filter { it.selected }
+                    .fold(BigDecimal.ZERO) { acc, item -> acc.add(item.itemTotal) }
+
+                val groupSelected = cartItemDtos.all { it.selected }
+
+                ShopCartGroup(
+                    shopId = ownerId,
+                    shopName = "${owner.firstName} ${owner.lastName}",
+                    shopRating = owner.rating,
+                    items = cartItemDtos,
+                    shopTotal = shopTotal,
+                    selected = groupSelected
+                )
+            }
+
+        val totalAmount = shopGroups.sumOf { it.shopTotal }
+        val selectedItemsCount = allCartItems.count { it.selected }
+        val totalItemsCount = allCartItems.size
 
         return CartDto(
             id = cart.id,
