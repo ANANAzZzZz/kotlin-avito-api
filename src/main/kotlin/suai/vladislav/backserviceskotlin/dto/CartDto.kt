@@ -19,7 +19,8 @@ data class ShopCartGroup(
     val shopName: String,
     val shopRating: Float,
     val items: List<CartItemDto>,
-    val shopTotal: BigDecimal = BigDecimal.ZERO
+    val shopTotal: BigDecimal = BigDecimal.ZERO,
+    var selected: Boolean = true
 )
 
 data class CartItemDto(
@@ -61,4 +62,9 @@ data class UpdateCartItemDto(
     val quantity: Int? = null,
     val selected: Boolean? = null,
     val liked: Boolean? = null
+)
+
+data class UpdateShopGroupSelectionDto(
+    @field:NotNull
+    val selected: Boolean
 )
